@@ -16,11 +16,21 @@ var _getMessages = require('../services/getMessages');
 
 var _getMessages2 = _interopRequireDefault(_getMessages);
 
+var _streamRecieve = require('../services/streamRecieve');
+
+var _streamRecieve2 = _interopRequireDefault(_streamRecieve);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
 
 var messageService = new _getMessages2.default();
+
+var sendMessage = function sendMessage(filePath) {
+  messageService.upload(filePath);
+};
+
+var streamRecieve = new _streamRecieve2.default(9001, sendMessage);
 
 app.use(_express2.default.static(_path2.default.join(__dirname, '../public')));
 

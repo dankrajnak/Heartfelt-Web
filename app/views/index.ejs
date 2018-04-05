@@ -16,6 +16,7 @@
         <![endif]-->
 
         <div class='main-content'>
+          <button id="record">Record</button>
           <h3>Hey, here's the list:</h3>
           <%if(messages.length>0){%>
             <ul>
@@ -29,10 +30,9 @@
         </div>
         <script src='vendor/recorder.js'></script>
         <script src='javascript/microphone.js'></script>
-        <script>
-          let microphone = new Microphone();
-          microphone.startRecording();
-        </script>
+        <script src='https://cdn.jsdelivr.net/binaryjs/0.2.1/binary.min.js'></script>
+        <script src='javascript/binarysend.js'></script>
+        <script src = 'javascript/index.js'></script>
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <!-- <script>
             window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;

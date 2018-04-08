@@ -39,17 +39,29 @@ app.set('views', _path2.default.join(__dirname, '../views'));
 
 //Get root
 app.get('/', function (req, res) {
+
   messageService.createContainer().then(function () {
     messageService.list().then(function (lis) {
-      var messages = lis.data.entries.map(function (entry) {
+      // Message names are stored as the number of miliseconds since January 1st, 1970
+      // to when the message was created.  We can this to sort them based
+      // on their creation time.
+      lis.data.entries.sort(function (a, b) {
+        return parseInt(b.name.slice(0, -4)) - parseInt(a.name.slice(0, -4));
+      });
+      var messages = lis.data.entries.map(function (entry, index) {
         return {
-          name: entry.name,
+          name: 'Message ' + (lis.data.entries.length - index),
           link: messageService.getUri(entry.name).uri
         };
       });
       res.render('index', { messages: messages });
     });
   });
+});
+
+//Get record
+app.get('/record', function (req, res) {
+  res.render('record');
 });
 
 exports.default = app;

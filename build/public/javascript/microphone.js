@@ -104,6 +104,32 @@ var Microphone = function () {
       }
       return buf.buffer;
     }
+  }, {
+    key: 'countdown',
+    value: function countdown(count, callback) {
+      var promises = [];
+
+      var _loop = function _loop(i) {
+        promises.push(new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            callback(i);
+            resolve(i);
+          }, (count - i) * 1000);
+        }));
+      };
+
+      for (var i = count; i > 0; i--) {
+        _loop(i);
+      }
+      // Wait for one more second without calling callback
+      // (so that we stay at 1 for one second)
+      promises.push(new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          return resolve(1);
+        }, count * 1000);
+      }));
+      return Promise.all(promises);
+    }
   }]);
 
   return Microphone;

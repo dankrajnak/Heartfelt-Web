@@ -24,17 +24,25 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
+        test: /\.scss$/,
         include: path.join(__dirname, 'app'),
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          use: ['css-loader']
-        })
-      }
+        use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
+          use: ['css-loader', 'sass-loader']
+        }))
+      },
     ]
   },
   plugins: [
     new ExtractTextPlugin('public/css/styles.css'), //Extract css
-    new CopyWebpackPlugin([{from: 'app/views', to:'views'}]) //Copy EJS over
+    new CopyWebpackPlugin([{from: 'app/views', to:'views'}]), //Copy EJS over
+    new CopyWebpackPlugin([{from: 'app/public/imgs', to: 'public/imgs'}]) //Copy images
   ]
+}
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports.plugins.push(
+    new webpack.optimize.UglifyJsPlugin(), 
+    new OptimizeCSSAssets()
+  );
 }

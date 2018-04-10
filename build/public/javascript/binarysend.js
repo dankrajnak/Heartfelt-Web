@@ -14,7 +14,7 @@ var BinarySend = function () {
     // this.socket.binaryType = 'arraybuffer'
     this.open = false;
     this.stream = null;
-    this.client = new BinaryClient('ws://localhost:9001');
+    this.client = new BinaryClient('ws://heartfelt-installation.azurewebsites:9001');
 
     this.client.on('open', function () {
       _this.open = true;

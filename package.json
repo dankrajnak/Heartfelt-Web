@@ -2,7 +2,7 @@
   "name": "heartfelt",
   "version": "1.0.0",
   "description": "A website for a custom art project",
-  "main": "build/index.js",
+  "main": "build/server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel ./app -d build",

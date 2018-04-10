@@ -18,6 +18,7 @@
   "dependencies": {
     "azure-storage": "^2.8.1",
     "binaryjs": "^0.2.1",
+    "debug": "^3.1.0",
     "dotenv": "^5.0.1",
     "ejs": "^2.5.7",
     "ejs-loader": "^0.3.1",

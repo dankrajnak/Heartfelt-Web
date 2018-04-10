@@ -30,6 +30,8 @@ var sendMessage = function sendMessage(filePath) {
   messageService.upload(filePath);
 };
 
+var port = process.env.PORT || 9001;
+
 var streamRecieve = new _streamRecieve2.default(9001, sendMessage);
 
 app.use(_express2.default.static(_path2.default.join(__dirname, '../public')));

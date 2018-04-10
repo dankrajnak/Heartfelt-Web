@@ -13,6 +13,8 @@ let sendMessage = (filePath)=>{
   messageService.upload(filePath);
 }
 
+const port = process.env.PORT || 9001;
+
 let streamRecieve = new StreamRecieve(9001, sendMessage);
 
 app.use(express.static(path.join(__dirname, '../public')));

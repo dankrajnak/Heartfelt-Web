@@ -15,7 +15,7 @@ let sendMessage = (filePath)=>{
 
 const port = process.env.PORT || 9001;
 
-let streamRecieve = new StreamRecieve(9001, sendMessage);
+let streamRecieve = new StreamRecieve(port, sendMessage);
 
 app.use(express.static(path.join(__dirname, '../public')));
 

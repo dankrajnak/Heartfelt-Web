@@ -5,7 +5,7 @@ class BinarySend{
     // this.socket.binaryType = 'arraybuffer'
     this.open = false;
     this.stream = null;
-    this.client = new BinaryClient('ws://heartfelt-installation.azurewebsites.net');
+    this.client = new BinaryClient('wss://heartfelt-installation.azurewebsites.net');
 
     this.client.on('open', ()=>{
       this.open = true;

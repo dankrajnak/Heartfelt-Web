@@ -45,7 +45,7 @@ var MessageService = function () {
       var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        _this2.blobService.createBlockBlobFromStream(_this2.containerName, name, _stream, 999999, function (err) {
+        _this2.blobService.createBlockBlobFromStream(_this2.containerName, name, _stream, 99999999, function (err) {
           if (err) {
             reject(err);
           } else {

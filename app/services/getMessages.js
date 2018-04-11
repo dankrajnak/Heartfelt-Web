@@ -27,7 +27,7 @@ export default class MessageService {
 
   stream(name, stream){
     return new Promise((resolve, reject) =>{
-      this.blobService.createBlockBlobFromStream(this.containerName, name, stream, 999999, err => {
+      this.blobService.createBlockBlobFromStream(this.containerName, name, stream, 99999999, err => {
         if (err) {
           reject(err);
         } else {

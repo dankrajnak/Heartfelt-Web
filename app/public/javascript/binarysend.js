@@ -8,7 +8,7 @@ export default class BinarySend{
     // this.socket = new WebSocket('ws://localhost:8080');
     // this.socket.binaryType = 'arraybuffer'
     this.sending = false;
-    this.socket = io.connect('https://heartfelt-installation.azurewebsites.net');
+    this.socket = io.connect('localhost:8080');
     this.stream = ss.createStream({objectMode: true});
     this.audioStream = new Readable({objectMode: true});
     this.buffer = [];
@@ -18,7 +18,6 @@ export default class BinarySend{
     // fast enough and the buffer is empty.  So, if it's empty, we'll just wait a little bit.
     this.audioStream._read = (size = 'does not matter')=>{
       if(this.sending || this.buffer.length > 0){
-        console.log(this.buffer.length);
         if(this.buffer.length>0){
           setTimeout(()=>this.audioStream.push(this.buffer.pop()), 10);
         } else{
@@ -39,9 +38,7 @@ export default class BinarySend{
 
   close(){
     this.sending = false;
-    console.log('CLOSED');
     this.buffer.unshift(null);
     this.stream.end();
-    console.log('END')
   }
 }

@@ -14,14 +14,13 @@ button.addEventListener('click', (e)=>{
   recording = !recording;
   if(recording){
     microphone.askForMicrophone().then(()=> {
-    //   Microphone.countdown(5, (count)=>{
-    //     button.innerHTML = count;
-    //   }).then(()=>{
+      Microphone.countdown(5, (count)=>{
+        button.innerHTML = count;
+      }).then(()=>{
         button.innerHTML = 'Stop Recording';
         microphone.startRecording();
-    //   })
+      })
     }).catch((error)=>{
-      console.log('THERE WAS A FUCKING ERROR');
       console.log(error);
     });
   }

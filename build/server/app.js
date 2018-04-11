@@ -26,11 +26,7 @@ var app = (0, _express2.default)();
 var server = require('http').Server(app);
 var messageService = new _getMessages2.default();
 
-var sendMessage = function sendMessage(filePath) {
-  messageService.upload(filePath);
-};
-
-var streamRecieve = new _streamRecieve2.default(server, sendMessage);
+var streamRecieve = new _streamRecieve2.default(server);
 
 app.use(_express2.default.static(_path2.default.join(__dirname, '../public')));
 
@@ -45,6 +41,9 @@ app.get('/', function (req, res) {
       // Message names are stored as the number of miliseconds since January 1st, 1970
       // to when the message was created.  We can this to sort them based
       // on their creation time.
+      lis.data.entries.forEach(function (entry) {
+        return console.log(entry.name);
+      });
       lis.data.entries.sort(function (a, b) {
         return parseInt(b.name.slice(0, -4)) - parseInt(a.name.slice(0, -4));
       });

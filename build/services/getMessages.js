@@ -40,13 +40,30 @@ var MessageService = function () {
       });
     }
   }, {
+    key: 'stream',
+    value: function stream(name, _stream) {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this2.blobService.createBlockBlobFromStream(_this2.containerName, name, _stream, 999999, function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({
+              message: 'Upload of \'' + name + '\' complete'
+            });
+          }
+        });
+      });
+    }
+  }, {
     key: 'upload',
     value: function upload(filePath) {
-      var _this2 = this;
+      var _this3 = this;
 
       var blobName = path.basename(filePath);
       return new Promise(function (resolve, reject) {
-        _this2.blobService.createBlockBlobFromLocalFile(_this2.containerName, blobName, filePath, function (err) {
+        _this3.blobService.createBlockBlobFromLocalFile(_this3.containerName, blobName, filePath, function (err) {
           if (err) {
             reject(err);
           } else {
@@ -60,15 +77,15 @@ var MessageService = function () {
   }, {
     key: 'list',
     value: function list() {
-      var _this3 = this;
+      var _this4 = this;
 
       return new Promise(function (resolve, reject) {
-        _this3.blobService.listBlobsSegmented(_this3.containerName, null, function (err, data) {
+        _this4.blobService.listBlobsSegmented(_this4.containerName, null, function (err, data) {
           if (err) {
             reject(err);
           } else {
             resolve({
-              message: 'Items in container \'' + _this3.containerName + '\':',
+              message: 'Items in container \'' + _this4.containerName + '\':',
               data: data
             });
           }
@@ -78,10 +95,10 @@ var MessageService = function () {
   }, {
     key: 'delete',
     value: function _delete(containerName, blobName) {
-      var _this4 = this;
+      var _this5 = this;
 
       return new Promise(function (resolve, reject) {
-        _this4.blobService.deleteBlobIfExists(containerName, blobName, function (err) {
+        _this5.blobService.deleteBlobIfExists(containerName, blobName, function (err) {
           if (err) {
             reject(err);
           } else {
@@ -96,7 +113,6 @@ var MessageService = function () {
     key: 'getUri',
     value: function getUri(blobName, permissions) {
       var connString = process.env.AzureWebJobsStorage;
-      var blobService = storage.createBlobService(connString);
 
       // Create a SAS token that expires in an hour
       // Set start time to five minutes ago to avoid clock skew.
@@ -115,11 +131,13 @@ var MessageService = function () {
         }
       };
 
-      var sasToken = blobService.generateSharedAccessSignature(this.containerName, blobName, sharedAccessPolicy);
+      var sasToken = this.blobService.generateSharedAccessSignature(this.containerName, blobName, sharedAccessPolicy, {
+        contentType: 'audio/wav'
+      });
 
       return {
         token: sasToken,
-        uri: blobService.getUrl(this.containerName, blobName, sasToken, true)
+        uri: this.blobService.getUrl(this.containerName, blobName, sasToken, true)
       };
     }
   }, {

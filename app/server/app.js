@@ -9,11 +9,7 @@ const server = require('http').Server(app);
 const messageService = new MessageService();
 
 
-let sendMessage = (filePath)=>{
-  messageService.upload(filePath);
-}
-
-let streamRecieve = new StreamRecieve(server, sendMessage);
+let streamRecieve = new StreamRecieve(server);
 
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -28,6 +24,7 @@ app.get('/', (req, res)=>{
         // Message names are stored as the number of miliseconds since January 1st, 1970
         // to when the message was created.  We can this to sort them based
         // on their creation time.
+        lis.data.entries.forEach((entry)=>console.log(entry.name));
         lis.data.entries.sort((a, b)=>{
           return parseInt(b.name.slice(0, -4)) - parseInt(a.name.slice(0, -4));
         });

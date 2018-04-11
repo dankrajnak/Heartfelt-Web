@@ -5,7 +5,7 @@ import StreamRecieve from '../services/streamRecieve';
 
 
 const app = express();
-
+const server = require('http').Server(app);
 const messageService = new MessageService();
 
 
@@ -13,9 +13,7 @@ let sendMessage = (filePath)=>{
   messageService.upload(filePath);
 }
 
-const port = process.env.PORT || 9001;
-
-let streamRecieve = new StreamRecieve(port, sendMessage);
+let streamRecieve = new StreamRecieve(server, sendMessage);
 
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -48,4 +46,4 @@ app.get('/record', (req, res)=>{
 })
 
 
-export default app;
+export default server;

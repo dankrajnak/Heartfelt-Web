@@ -7,31 +7,40 @@ Object.defineProperty(exports, "__esModule", {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var wav = require('wav');
-var BinaryServer = require('binaryjs').BinaryServer;
+var ss = require('socket.io-stream');
 
-var StreamRecieve = function StreamRecieve(port, callback) {
+var StreamRecieve = function StreamRecieve(httpServer, callback) {
   _classCallCheck(this, StreamRecieve);
 
-  this.server = BinaryServer({ port: port });
+  var io = require('socket.io')(httpServer);
 
-  this.server.on('connection', function (client) {
+  io.on('connection', function (socket) {
     console.log('Binary Connection');
 
-    client.on('stream', function (stream, meta) {
+    var fileWriter = void 0;
+    ss(socket).on('audioMessage', function (stream, meta) {
       console.log('stream');
       var filePath = './messages/' + Date.now() + '.wav';
-      var fileWriter = new wav.FileWriter(filePath, {
+      fileWriter = new wav.FileWriter(filePath, {
         channels: 1,
         bitDepth: 16
       });
-      stream.pipe(fileWriter);
 
-      stream.on('end', function () {
+      stream.pipe(fileWriter);
+      // stream.pipe(process.stdout);
+
+      stream.on('finish', function () {
         fileWriter.end();
         console.log('Wrote to file');
-        callback(filePath);
+        // callback(filePath);
       });
     });
+    //
+    // ss(socket).on('end', (stream, meta)=>{
+    //   fileWriter.end();
+    //   console.log('Wrote to file');
+    //   callback(filePath);
+    // })
   });
 };
 

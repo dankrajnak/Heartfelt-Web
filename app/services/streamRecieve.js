@@ -1,29 +1,38 @@
 const wav = require('wav');
-const BinaryServer = require('binaryjs').BinaryServer;
+const ss = require('socket.io-stream');
+
 
 class StreamRecieve{
-  constructor(port, callback){
-    this.server = BinaryServer({port: port});
+  constructor(httpServer, callback){
+    const io = require('socket.io')(httpServer);
 
-    this.server.on('connection',(client)=>{
+    io.on('connection',(socket)=>{
       console.log('Binary Connection');
 
-
-      client.on('stream', (stream, meta) =>{
+      let fileWriter;
+      ss(socket).on('audioMessage', (stream, meta) =>{
         console.log('stream');
         let filePath = `./messages/${Date.now()}.wav`;
-        let fileWriter = new wav.FileWriter(filePath, {
+        fileWriter = new wav.FileWriter(filePath, {
           channels: 1,
           bitDepth: 16
         });
-        stream.pipe(fileWriter);
 
-        stream.on('end', ()=>{
+        stream.pipe(fileWriter);
+        // stream.pipe(process.stdout);
+
+        stream.on('finish', ()=>{
           fileWriter.end();
           console.log('Wrote to file');
-          callback(filePath);
+          // callback(filePath);
         });
       });
+      //
+      // ss(socket).on('end', (stream, meta)=>{
+      //   fileWriter.end();
+      //   console.log('Wrote to file');
+      //   callback(filePath);
+      // })
     });
   }
 }

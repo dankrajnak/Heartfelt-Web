@@ -23,16 +23,14 @@ var _streamRecieve2 = _interopRequireDefault(_streamRecieve);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
-
+var server = require('http').Server(app);
 var messageService = new _getMessages2.default();
 
 var sendMessage = function sendMessage(filePath) {
   messageService.upload(filePath);
 };
 
-var port = process.env.PORT || 9001;
-
-var streamRecieve = new _streamRecieve2.default(port, sendMessage);
+var streamRecieve = new _streamRecieve2.default(server, sendMessage);
 
 app.use(_express2.default.static(_path2.default.join(__dirname, '../public')));
 
@@ -66,4 +64,4 @@ app.get('/record', function (req, res) {
   res.render('record');
 });
 
-exports.default = app;
+exports.default = server;

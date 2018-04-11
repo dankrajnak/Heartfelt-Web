@@ -1,6 +1,6 @@
 // Requires that recorder.min.js is downloaded also.  I can find a way to bundle them later.
 
-class Microphone {
+export default class Microphone {
 
   constructor(sender) {
     this.recording = false;

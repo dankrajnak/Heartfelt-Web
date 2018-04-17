@@ -40,7 +40,7 @@ export default class BinarySend{
 
   close(){
     // OK, I know I should convert this to a promise instead of just waiting, but let me just get this to work.
-    if(this.bufffer.length > 0){
+    if(this.buffer.length > 0){
       setTimeout(()=>this.close(), 100);
       return;
     }

@@ -62,8 +62,10 @@ export default class Microphone {
     this.recorder = this.audioContext.createScriptProcessor(bufferSize, 1, 1);
 
     this.recorder.onaudioprocess = (audio) => {
-      let left = audio.inputBuffer.getChannelData(0);
-      this.sender.send(Microphone.convertFloat32ToInt16(left));
+      if(this.recording){
+        let left = audio.inputBuffer.getChannelData(0);
+        this.sender.send(Microphone.convertFloat32ToInt16(left));
+      }
     }
   }
 

@@ -75,8 +75,8 @@ export default class Microphone {
 
   stopRecording() {
     this.recording = false;
-    this.audioInput.disconnect();
-    this.recorder.disconnect();
+    // this.audioInput.disconnect();
+    // this.recorder.disconnect();
     this.sender.close();
   }
 

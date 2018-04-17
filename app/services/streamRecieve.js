@@ -26,7 +26,7 @@ class StreamRecieve{
           bitDepth: 16
         });
 
-        // messageService.stream(filePath, stream.pipe(writer))
+        messageService.stream(filePath, stream.pipe(writer))
 
         socket.on('finishAudio', ()=>{
           writer.end();

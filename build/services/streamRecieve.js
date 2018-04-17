@@ -40,7 +40,7 @@ var StreamRecieve = function StreamRecieve(httpServer) {
         bitDepth: 16
       });
 
-      // messageService.stream(filePath, stream.pipe(writer))
+      messageService.stream(filePath, stream.pipe(writer));
 
       socket.on('finishAudio', function () {
         writer.end();

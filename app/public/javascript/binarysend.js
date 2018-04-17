@@ -22,7 +22,7 @@ export default class BinarySend{
         if(this.buffer.length>0){
           this.audioStream.push(this.buffer.pop());
         } else{
-          setTimeout(()=>this.audioStream._read(), 10)
+          setTimeout(()=>this.audioStream._read(), 0)
         }
       }
     }

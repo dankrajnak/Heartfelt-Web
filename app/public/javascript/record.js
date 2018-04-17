@@ -4,7 +4,7 @@ import Microphone from './Microphone';
 console.log('HIII!!');
 const bs = new BinarySend();
 console.log('HEY.');
-
+setInterval(()=>console.log('Check'), 1000)
 const microphone = new Microphone(bs);
 
 let recording = false;

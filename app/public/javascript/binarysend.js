@@ -20,7 +20,7 @@ export default class BinarySend{
       console.log(this.buffer.length);
       if(this.sending || this.buffer.length > 0){
         if(this.buffer.length>0){
-          setTimeout(()=>this.audioStream.push(this.buffer.pop()), 10);
+          this.audioStream.push(this.buffer.pop());
         } else{
           setTimeout(()=>this.audioStream._read(), 10)
         }

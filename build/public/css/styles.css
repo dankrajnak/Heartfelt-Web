@@ -378,14 +378,12 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-html, body {
-  background: url("/imgs/background.jpg"); }
-
 .main-content {
   display: block;
-  width: 50%;
-  margin: auto;
-  margin-top: 10%; }
+  width: 80%;
+  padding-left: 10px;
+  margin-top: 10%;
+  margin-bottom: 10%; }
 
 h3 {
   color: #BF4A49;
@@ -397,7 +395,6 @@ h3 {
 
 ul {
   list-style-type: none;
-  margin: auto;
   width: 40%; }
 
 li {

@@ -21,9 +21,16 @@ var StreamRecieve = function StreamRecieve(httpServer) {
   var messageService = new _getMessages2.default();
 
   var io = require('socket.io')(httpServer);
+  var clients = [];
 
   io.on('connection', function (socket) {
     console.log('Binary Connection');
+
+    socket.on('startAudio', function (from, msg) {
+      console.log('startAudio');
+      console.log('from', socket.id);
+      clients.push(socket);
+    });
 
     ss(socket).on('audioMessage', function (stream, meta) {
       console.log('stream');
@@ -33,13 +40,18 @@ var StreamRecieve = function StreamRecieve(httpServer) {
         bitDepth: 16
       });
 
-      messageService.stream(filePath, stream.pipe(writer));
+      // messageService.stream(filePath, stream.pipe(writer))
 
-      stream.on('finish', function () {
+      socket.on('finishAudio', function () {
         writer.end();
         console.log('Wrote to file');
       });
     });
+  });
+
+  io.on('disconnect', function (something) {
+    console.log('DISCONNECT');
+    console.log(something);
   });
 };
 

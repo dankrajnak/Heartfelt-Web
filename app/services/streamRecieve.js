@@ -7,10 +7,16 @@ class StreamRecieve{
     const messageService = new MessageService();
 
     const io = require('socket.io')(httpServer);
+    let clients = [];
 
     io.on('connection',(socket)=>{
       console.log('Binary Connection');
 
+      socket.on('startAudio', (from, msg)=>{
+        console.log('startAudio');
+        console.log('from', socket.id);
+        clients.push(socket);
+      })
 
       ss(socket).on('audioMessage', (stream, meta) =>{
         console.log('stream');
@@ -20,14 +26,19 @@ class StreamRecieve{
           bitDepth: 16
         });
 
-        messageService.stream(filePath, stream.pipe(writer))
+        // messageService.stream(filePath, stream.pipe(writer))
 
-        stream.on('finish', ()=>{
+        socket.on('finishAudio', ()=>{
           writer.end();
           console.log('Wrote to file');
         });
       });
     });
+
+    io.on('disconnect', (something)=>{
+      console.log('DISCONNECT');
+      console.log(something);
+    })
   }
 }
 

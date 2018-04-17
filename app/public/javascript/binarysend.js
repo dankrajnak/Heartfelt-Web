@@ -8,7 +8,7 @@ export default class BinarySend{
     // this.socket = new WebSocket('ws://localhost:8080');
     // this.socket.binaryType = 'arraybuffer'
     this.sending = false;
-    this.socket = io.connect('https://heartfelt-installation.azurewebsites.net');
+    this.socket = io.connect('localhost:8080');
     this.stream = ss.createStream({objectMode: true});
     this.audioStream = new Readable({objectMode: true});
     this.buffer = [];
@@ -31,6 +31,7 @@ export default class BinarySend{
     this.buffer.unshift(data);
     if(!this.sending){
       this.sending = true;
+      this.socket.emit('startAudio');
       ss(this.socket).emit('audioMessage', this.stream);
       this.audioStream.pipe(this.stream);
     }
@@ -39,6 +40,7 @@ export default class BinarySend{
   close(){
     this.sending = false;
     this.buffer.unshift(null);
+    this.socket.emit('finishAudio');
     this.stream.end();
   }
 }

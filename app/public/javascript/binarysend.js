@@ -17,6 +17,7 @@ export default class BinarySend{
     // it needs to push something into the stream.  Sometimes the audio isn't sampled
     // fast enough and the buffer is empty.  So, if it's empty, we'll just wait a little bit.
     this.audioStream._read = (size = 'does not matter')=>{
+      console.log(this.buffer.length);
       if(this.sending || this.buffer.length > 0){
         if(this.buffer.length>0){
           setTimeout(()=>this.audioStream.push(this.buffer.pop()), 10);

@@ -7,6 +7,7 @@ export default class Microphone {
     this.stream = null;
     this.recorder = null;
     this.intervalKey = null;
+    this.microphoneStream = null;
     this.sender = sender;
   }
 
@@ -46,6 +47,7 @@ export default class Microphone {
 
 
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        this.microphoneStream = stream;
         this._initializeRecorder(stream);
         resolve('GOT STREAM');
       }).catch(error => {
@@ -59,13 +61,17 @@ export default class Microphone {
     this.audioContext = new AudioContext();
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     let bufferSize = 2048;
+    // Create a scriptProcessorNode, which takes in buffered audio, processes it
+    // and then sends it to an output buffer.  In this case, we won't send any
+    // audio to the output buffer.  We will convert the buffer to 16bit integers
+    // and send it through the sender.
     this.recorder = this.audioContext.createScriptProcessor(bufferSize, 1, 1);
 
     this.recorder.onaudioprocess = (audio) => {
-      if(this.recording){
+      // if(this.recording){
         let left = audio.inputBuffer.getChannelData(0);
         this.sender.send(Microphone.convertFloat32ToInt16(left));
-      }
+      // }
     }
   }
 
@@ -77,8 +83,10 @@ export default class Microphone {
 
   stopRecording() {
     this.recording = false;
-    // this.audioInput.disconnect();
-    // this.recorder.disconnect();
+    this.microphoneStream.getTracks().forEach((track)=>track.stop());
+    this.audioInput.disconnect();
+
+    this.recorder.disconnect();
     this.sender.close();
   }
 

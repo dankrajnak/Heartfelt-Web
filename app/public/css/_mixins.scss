@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans|Zeyada');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Zeyada|Open+Sans+Condensed:300');
 
 @mixin display-font(){
   font-family: 'Zeyada';
@@ -6,4 +6,8 @@
 
 @mixin sans-serif-font(){
   font-family: 'Open Sans';
+}
+
+@mixin serif-font(){
+  font-family: 'Open Sans Condensed'
 }

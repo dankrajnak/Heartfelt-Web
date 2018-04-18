@@ -6,8 +6,39 @@ html, body{
   display: block;
   width: 80%;
   padding-left: 10px;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin:0 auto 10% auto;
+}
+
+#listen{
+  display: block;
+  margin: auto;
+  padding: 15px;
+  border: solid 1px $red;
+  width: 300px;
+  text-align: center;
+  color: $red;
+  @include serif-font;
+}
+
+#recordLink{
+  display: block;
+  margin: auto;
+  margin-top: 30px;
+  padding: 15px;
+  background: $red;
+  width: 300px;
+  text-align: center;
+  color: white;
+  @include serif-font;
+}
+
+#noMessages{
+  text-align: center;
+}
+
+svg{
+  display: block;
+  margin: auto;
 }
 
 h3 {
@@ -18,9 +49,21 @@ h3 {
   font-weight: 400;
   @include display-font;
 }
+
+#title{
+  margin-top: -100px;
+  color: $red;
+  text-decoration: underline;
+  text-align: center;
+  font-size: 36px;
+  @include display-font;
+}
+
 ul{
   list-style-type: none;
   width: 40%;
+  margin: auto;
+  display: block;
 }
 li{
   padding: 20px 10px;

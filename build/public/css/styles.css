@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans|Zeyada);/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans|Zeyada|Open+Sans+Condensed:300);/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
 /**
@@ -382,8 +382,35 @@ textarea {
   display: block;
   width: 80%;
   padding-left: 10px;
-  margin-top: 10%;
-  margin-bottom: 10%; }
+  margin: 0 auto 10% auto; }
+
+#listen {
+  display: block;
+  margin: auto;
+  padding: 15px;
+  border: solid 1px #BF4A49;
+  width: 300px;
+  text-align: center;
+  color: #BF4A49;
+  font-family: 'Open Sans Condensed'; }
+
+#recordLink {
+  display: block;
+  margin: auto;
+  margin-top: 30px;
+  padding: 15px;
+  background: #BF4A49;
+  width: 300px;
+  text-align: center;
+  color: white;
+  font-family: 'Open Sans Condensed'; }
+
+#noMessages {
+  text-align: center; }
+
+svg {
+  display: block;
+  margin: auto; }
 
 h3 {
   color: #BF4A49;
@@ -393,9 +420,19 @@ h3 {
   font-weight: 400;
   font-family: 'Zeyada'; }
 
+#title {
+  margin-top: -100px;
+  color: #BF4A49;
+  text-decoration: underline;
+  text-align: center;
+  font-size: 36px;
+  font-family: 'Zeyada'; }
+
 ul {
   list-style-type: none;
-  width: 40%; }
+  width: 40%;
+  margin: auto;
+  display: block; }
 
 li {
   padding: 20px 10px;

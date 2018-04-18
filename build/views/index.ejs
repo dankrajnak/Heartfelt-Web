@@ -13,20 +13,53 @@
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-
         <div class='main-content'>
-          <!-- <button id="record">Record</button> -->
-          <h3>Heartfelt.</h3>
+          <svg width="500" height="500"></svg>
+          <h4 id = "title">Heartfelt</h4>
           <%if(messages.length>0){%>
-            <ul>
-              <% messages.forEach((message)=>{ %>
-              <%-`<a href=${message.link}><li><span>${message.name}</span></li></a>`%>
-              <%})%>
-            </ul>
+            <% message = messages[Math.floor(Math.random()*messages.length)] %>
+            <%- `<a href=${message.link} id = "listen">Listen To A Message</button>` %>
           <%} else{%>
-            <p>No messages on the server</p>
+            <p id = "noMessages">No messages... yet</p>
           <%}%>
+          <a href="/record" id = "recordLink">Record A Message</a>
         </div>
+
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+          var svg = d3.select("svg"),
+              width = +svg.attr("width"),
+              height = +svg.attr("height"),
+              angles = d3.range(0, 2* Math.PI, Math.PI / 400);
+
+          var path = svg.append("g")
+              .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+              .attr("fill", "none")
+              .attr("stroke-width", 10)
+              .attr("stroke-linejoin", "round")
+            .selectAll("path")
+            .data(["rgb(161, 255, 255)", "rgb(255, 43, 255)", "rgb(255, 255, 47)"])
+            .enter().append("path")
+              .attr("stroke", function(d) { return d; })
+              .style("mix-blend-mode", "darken")
+              .datum(function(d, i) {
+                return d3.radialLine()
+                    .curve(d3.curveLinearClosed)
+                    .angle(function(a) { return a; })
+                    .radius(function(a) {
+                      var t = d3.now() / 1000;
+                      a += Math.PI/3
+                      return 100 + Math.cos(a * 2 - i * Math.PI/9 + t) * Math.pow((1 + Math.cos(a - t)) / 2, 3) * 120;
+                    });
+              });
+
+          d3.timer(function() {
+            path.attr("d", function(d) {
+              return d(angles);
+            });
+          });
+
+        </script>
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <!-- <script>
             window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;

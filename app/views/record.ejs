@@ -36,10 +36,13 @@
           <p>
             I encourage you not to practice. Once you get an idea, just go for it. Once you press the button below,
             the website will ask for access to your microphone and will begin a countdown.  After you finish your message,
-            press stop recording.  Please wait a few seconds after you have finished recording to allow time for the last
+            press 'Submit'.  Please wait a few seconds after you have finished recording to allow time for the last
             part of your message to be streamed to the server.  Thank you for your message!
           </p>
-          <button id='record'>Record</button>
+          <div id='buttonContainer'>
+            <button id='record'>Record</button>
+            <button id='cancel' style="display: none">Cancel</button>
+          </div>
         </div>
         <!-- <script src='vendor/recorder.js'></script> -->
         <script src='javascript/bundle.js'></script>

@@ -94,11 +94,11 @@ var MessageService = function () {
     }
   }, {
     key: 'delete',
-    value: function _delete(containerName, blobName) {
+    value: function _delete(blobName) {
       var _this5 = this;
 
       return new Promise(function (resolve, reject) {
-        _this5.blobService.deleteBlobIfExists(containerName, blobName, function (err) {
+        _this5.blobService.deleteBlobIfExists(_this5.containerName, blobName, function (err) {
           if (err) {
             reject(err);
           } else {

@@ -8,7 +8,7 @@ export default class BinarySend{
     // this.socket = new WebSocket('ws://localhost:8080');
     // this.socket.binaryType = 'arraybuffer'
     this.sending = false;
-    this.socket = io.connect('heartfelt-installation.azurewebsites.net');
+    this.socket = io.connect('localhost:8080');
     this.stream = ss.createStream({objectMode: true});
     this.audioStream = new Readable({objectMode: true});
     this.buffer = [];
@@ -17,7 +17,6 @@ export default class BinarySend{
     // it needs to push something into the stream.  Sometimes the audio isn't sampled
     // fast enough and the buffer is empty.  So, if it's empty, we'll just wait a little bit.
     this.audioStream._read = (size = 'does not matter')=>{
-      console.log(this.buffer.length);
       if(this.sending || this.buffer.length > 0){
         if(this.buffer.length>0){
           this.audioStream.push(this.buffer.pop());
@@ -38,15 +37,27 @@ export default class BinarySend{
     }
   }
 
-  close(){
-    // OK, I know I should convert this to a promise instead of just waiting, but let me just get this to work.
-    if(this.buffer.length > 0){
-      setTimeout(()=>this.close(), 100);
-      return;
+  close(save){
+    if(!save){
+      this.buffer.length = 0;
+      this.sending = false;
+      this.socket.emit('deleteAudio');
+      this.socket.emit('finishAudio');
+      this.stream.end();
+      return
+    } else if(this.sending){
+      // OK, I know I should convert this to a promise instead of just waiting, but let me just get this to work.
+      if(this.buffer.length > 0){
+        setTimeout(()=>this.close(save), 100);
+        return;
+      }
+      this.sending = false;
+      this.buffer.unshift(null);
+      if(!save){
+
+      }
+      this.socket.emit('finishAudio');
+      this.stream.end();
     }
-    this.sending = false;
-    this.buffer.unshift(null);
-    this.socket.emit('finishAudio');
-    this.stream.end();
   }
 }

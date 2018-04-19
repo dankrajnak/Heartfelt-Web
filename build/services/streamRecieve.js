@@ -34,17 +34,27 @@ var StreamRecieve = function StreamRecieve(httpServer) {
 
     ss(socket).on('audioMessage', function (stream, meta) {
       console.log('stream');
+      var deleteAudio = false;
       var filePath = Date.now() + '.wav';
       var writer = new wav.Writer({
         channels: 1,
         bitDepth: 16
       });
 
-      messageService.stream(filePath, stream.pipe(writer));
+      messageService.stream(filePath, stream.pipe(writer)).then(function () {
+        if (deleteAudio) messageService.delete(filePath).then(function () {
+          console.log(filePath, 'deleted');
+        });
+      });
 
       socket.on('finishAudio', function () {
         writer.end();
         console.log('Wrote to file');
+      });
+
+      socket.on('deleteAudio', function () {
+        console.log('marked for delete');
+        deleteAudio = true;
       });
     });
   });

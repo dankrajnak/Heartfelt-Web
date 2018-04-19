@@ -69,9 +69,9 @@ export default class MessageService {
     });
   };
 
-  delete(containerName, blobName) {
+  delete(blobName) {
     return new Promise((resolve, reject) => {
-      this.blobService.deleteBlobIfExists(containerName, blobName, err => {
+      this.blobService.deleteBlobIfExists(this.containerName, blobName, err => {
         if (err) {
           reject(err);
         } else {

@@ -20,18 +20,30 @@ class StreamRecieve{
 
       ss(socket).on('audioMessage', (stream, meta) =>{
         console.log('stream');
+        let deleteAudio = false;
         let filePath = `${Date.now()}.wav`;
         let writer = new wav.Writer({
           channels: 1,
           bitDepth: 16
         });
 
-        messageService.stream(filePath, stream.pipe(writer))
+        messageService.stream(filePath, stream.pipe(writer)).then(()=>{
+          if(deleteAudio)
+          messageService.delete(filePath).then(()=>{
+            console.log(filePath, 'deleted');
+          })
+        })
 
         socket.on('finishAudio', ()=>{
           writer.end();
           console.log('Wrote to file');
         });
+
+        socket.on('deleteAudio', ()=>{
+          console.log('marked for delete')
+          deleteAudio = true;
+        });
+
       });
     });
 

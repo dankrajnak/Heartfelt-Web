@@ -81,13 +81,13 @@ export default class Microphone {
     this.recorder.connect(this.audioContext.destination);
   }
 
-  stopRecording() {
+  stopRecording(send) {
     this.recording = false;
     this.microphoneStream.getTracks().forEach((track)=>track.stop());
     this.audioInput.disconnect();
 
     this.recorder.disconnect();
-    this.sender.close();
+    this.sender.close(send);
   }
 
   static convertFloat32ToInt16(buffer) {

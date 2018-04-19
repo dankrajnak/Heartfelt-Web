@@ -32,6 +32,13 @@ html, body{
   @include serif-font;
 }
 
+@media screen and (max-width: 500px){
+  #listen, #recordLink{
+    width: 90%;
+  }
+}
+
+
 #noMessages{
   text-align: center;
 }

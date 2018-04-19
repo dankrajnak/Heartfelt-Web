@@ -13,8 +13,9 @@
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
+        <svg height="500"></svg>
         <div class='main-content'>
-          <svg width="500" height="500"></svg>
+
           <h4 id = "title">Heartfelt</h4>
           <%if(messages.length>0){%>
             <% message = messages[Math.floor(Math.random()*messages.length)] %>
@@ -27,10 +28,15 @@
 
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script>
+          var width = window.innerWidth;
+
+
+
           var svg = d3.select("svg"),
-              width = +svg.attr("width"),
-              height = +svg.attr("height"),
               angles = d3.range(0, 2* Math.PI, Math.PI / 400);
+
+          svg.attr('width', width);
+          var height = svg.attr('height');
 
           var path = svg.append("g")
               .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")

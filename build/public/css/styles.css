@@ -388,7 +388,7 @@ textarea {
   margin: auto;
   padding: 15px;
   border: solid 1px #BF4A49;
-  width: 300px;
+  max-width: 200px;
   text-align: center;
   color: #BF4A49;
   font-family: 'Open Sans Condensed'; }
@@ -399,7 +399,7 @@ textarea {
   margin-top: 30px;
   padding: 15px;
   background: #BF4A49;
-  width: 300px;
+  max-width: 200px;
   text-align: center;
   color: white;
   font-family: 'Open Sans Condensed'; }

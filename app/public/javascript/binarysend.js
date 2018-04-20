@@ -8,7 +8,7 @@ export default class BinarySend{
     // this.socket = new WebSocket('ws://localhost:8080');
     // this.socket.binaryType = 'arraybuffer'
     this.sending = false;
-    this.socket = io.connect('localhost:8080');
+    this.socket = io.connect('heartfelt-installation.azurewebsites.net');
     this.stream = ss.createStream({objectMode: true});
     this.audioStream = new Readable({objectMode: true});
     this.buffer = [];

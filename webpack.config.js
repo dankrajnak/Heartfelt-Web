@@ -31,10 +31,31 @@ module.exports = [{
   },
   {
     devtool: 'inline-source-map',
-    entry: ['./app/jsbundler.js'],
+    entry: ['./app/public/javascript/record.js'],
     output: {
       path: path.join(__dirname, 'build/public/javascript'),
-      filename: 'bundle.js'
+      filename: 'record.js'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          include: path.join(__dirname, 'app'),
+          exclude: /node_modules/,
+          query: {
+            presets: ['env']
+          }
+        }
+      ]
+    }
+  },
+  {
+    devtool: 'inline-source-map',
+    entry: ['./app/public/javascript/homepage.js'],
+    output: {
+      path: path.join(__dirname, 'build/public/javascript'),
+      filename: 'homepage.js'
     },
     module: {
       rules: [
@@ -53,6 +74,12 @@ module.exports = [{
 ]
 
 if (process.env.NODE_ENV === 'production') {
+  module.exports.forEach((exp)=>{
+    console.log(exp);
+    if(exp.devtool)
+      delete exp.devtool;
+  })
+
   module.exports.plugins.push(
     new webpack.optimize.UglifyJsPlugin(),
     new OptimizeCSSAssets()

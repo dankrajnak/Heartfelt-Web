@@ -5,8 +5,6 @@ const Readable = require('stream').Readable;
 export default class BinarySend{
 
   constructor(){
-    // this.socket = new WebSocket('ws://localhost:8080');
-    // this.socket.binaryType = 'arraybuffer'
     this.sending = false;
     this.socket = io.connect('heartfelt-installation.azurewebsites.net');
     this.stream = ss.createStream({objectMode: true});
@@ -15,9 +13,10 @@ export default class BinarySend{
 
     this._bufferLeft = 0;
     // OK.  So, this may be a reaaally dumb way to do this, but uhh, it's late,
-    // and I need this to work. The basic problem is that each time _read is called,
-    // it needs to push something into the stream.  Sometimes the audio isn't sampled
-    // fast enough and the buffer is empty.  So, if it's empty, we'll just wait a little bit.
+    // and I need this to work. The basic problem is that sometimes when _read
+    // is called, the buffer is empty, but there is still data to send.  It's
+    // just being generated slower than it's being sent.  So, we just set a timeout
+    // if we're still sending stuff and wait until the buffer fills up a bit more.
     this.audioStream._read = (size = 'does not matter')=>{
       if(this.sending || this.buffer.length > 0){
         if(this.buffer.length>0){

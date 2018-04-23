@@ -1,5 +1,3 @@
-// Requires that recorder.min.js is downloaded also.  I can find a way to bundle them later.
-
 export default class Microphone {
   /**
    * Record audio using AudioContext.  Chunks of audio will be passed into
@@ -87,7 +85,7 @@ export default class Microphone {
   }
 
   /**
-   * Stop recording and close free up resources.
+   * Stop recording and free up resources.
    * @return {Promise}      resolves after microphone is successfully closed.
    */
   stopRecording() {

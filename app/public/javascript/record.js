@@ -2,7 +2,7 @@ import BinarySend from './BinarySend';
 import Microphone from './Microphone';
 
 const bs = new BinarySend();
-const microphone = new Microphone(bs);
+const microphone = new Microphone((audio)=>bs.send(audio));
 
 let recorded = false;
 let recording = false;
@@ -25,17 +25,28 @@ button.addEventListener('click', (e)=>{
     });
   }
   else{
-    microphone.stopRecording(true);
-    button.innerHTML = 'Thank you for your message!';
-    cancel.style.display = "none";
     recorded = true;
+    button.innerHTML = "Uploading...";
+    microphone.stopRecording().then(()=>{
+      cancel.style.display = "none";
+      let percentageUpdate = setInterval(()=>{
+        button.innerHTML = bs.getPercentageProgress() + "%";
+      }, 100)
+      bs.close(true).then(()=>{
+        button.innerHTML = 'Thank you for your message!';
+        clearInterval(percentageUpdate);
+      });
+    });
   }
 });
 
 cancel.addEventListener('click', (e)=>{
-  console.log('event!');
-  microphone.stopRecording(false);
   cancel.style.display = "none";
-  button.innerHTML = 'Record';
-  recording = false;
+  button.innerHTML = 'Cancelling...';
+  microphone.stopRecording().then(()=>{
+    bs.close(false).then(()=>{
+      button.innerHTML = 'Please reload the page';
+      recording = false;
+    });
+  });
 })

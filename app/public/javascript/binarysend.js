@@ -12,6 +12,8 @@ export default class BinarySend{
     this.stream = ss.createStream({objectMode: true});
     this.audioStream = new Readable({objectMode: true});
     this.buffer = [];
+
+    this._bufferLeft = 0;
     // OK.  So, this may be a reaaally dumb way to do this, but uhh, it's late,
     // and I need this to work. The basic problem is that each time _read is called,
     // it needs to push something into the stream.  Sometimes the audio isn't sampled
@@ -19,7 +21,7 @@ export default class BinarySend{
     this.audioStream._read = (size = 'does not matter')=>{
       if(this.sending || this.buffer.length > 0){
         if(this.buffer.length>0){
-          this.audioStream.push(this.buffer.pop());
+          this.audioStream.push(this.buffer.pop())
         } else{
           setTimeout(()=>this.audioStream._read(), 0)
         }
@@ -37,27 +39,65 @@ export default class BinarySend{
     }
   }
 
+  /**
+   * Sends all the data left on the buffer and closes the stream.
+   * @param  {bool} save If false, the file will be deleted immediately after it's saved.
+   * @return {Promise}   Resolves when all the data has been sent.
+   */
   close(save){
-    if(!save){
-      this.buffer.length = 0;
+    // Stop the stream and delete the file.
+    return new Promise((resolve, reject)=>{
       this.sending = false;
-      this.socket.emit('deleteAudio');
-      this.socket.emit('finishAudio');
-      this.stream.end();
-      return
-    } else if(this.sending){
-      // OK, I know I should convert this to a promise instead of just waiting, but let me just get this to work.
-      if(this.buffer.length > 0){
-        setTimeout(()=>this.close(save), 100);
-        return;
-      }
-      this.sending = false;
-      this.buffer.unshift(null);
       if(!save){
+        this.buffer.length = 0;
+        this.socket.emit('deleteAudio');
+        this.socket.emit('finishAudio');
+        this.stream.end();
+        resolve();
+      } else{
+        // Not sure if this is necessary
+        // this.buffer.unshift(null);
 
+        //Used in getPercentageLeft()
+        this._bufferLeft = this.buffer.length;
+
+        this.flush().then(()=>{
+          this.socket.emit('finishAudio');
+          this.stream.end();
+          resolve();
+        })
       }
-      this.socket.emit('finishAudio');
-      this.stream.end();
+    })
+  }
+
+  /**
+   * This doesn't operate like a normal flush.  This will only resolve when
+   * this.close() has been called and this.sending is false.  Because (and I know
+   * at this point I might be tying this too tightly to the Microphone class)
+   * the buffer is often 0, and it's not possible to listen for when all the audio
+   * has been processed, this is what makes sense.
+   * @return {Promise} A promise that will resovle when _checkIfFinished() is true.
+   */
+  flush(){
+    return new Promise((resolve, reject)=>{
+      let interval = setInterval(()=>{
+        if(this._checkIfFinished()){
+          clearInterval(interval);
+          resolve();
+        }
+      }, 10);
+    })
+  }
+
+  getPercentageProgress(){
+    if(this.sending){
+      return 0;
+    } else{
+      return Math.round(100*(1-this.buffer.length/this._bufferLeft));
     }
+  }
+
+  _checkIfFinished(){
+    return this.buffer.length == 0 && !this.sending;
   }
 }

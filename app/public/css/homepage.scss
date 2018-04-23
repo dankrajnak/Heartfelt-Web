@@ -75,6 +75,7 @@ html{
   display: block;
   width: 90%;
   margin:20% auto 10% auto;
+
   p{
     width: 90%;
     line-height: 1.8em;
@@ -82,6 +83,7 @@ html{
     @include serif-font;
     color: $foreground;
   }
+  
   #noMessages{
     text-align: center;
   }

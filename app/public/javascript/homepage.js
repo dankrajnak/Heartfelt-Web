@@ -10,8 +10,6 @@ continueButton.addEventListener('click', (e)=>{
   }, 500);
 });
 
-// let width = window.innerWidth;
-// let height = window.innerHeight;
 
 // let svg = d3.select("svg"),
 //     angles = d3.range(0, 2* Math.PI, Math.PI / 400);

@@ -1,14 +1,19 @@
 // Requires that recorder.min.js is downloaded also.  I can find a way to bundle them later.
 
 export default class Microphone {
-
-  constructor(sender) {
+  /**
+   * Record audio using AudioContext.  Chunks of audio will be passed into
+   * the provided processAudio function.  Audio will be passed into processAudio
+   * as an Int16Array.
+   * @param {function} processAudio a function which takes in the audio as a Int16Array
+   */
+  constructor(processAudio) {
     this.recording = false;
     this.stream = null;
     this.recorder = null;
     this.intervalKey = null;
     this.microphoneStream = null;
-    this.sender = sender;
+    this.processAudio = processAudio;
   }
 
   /**
@@ -61,6 +66,7 @@ export default class Microphone {
     this.audioContext = new AudioContext();
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     let bufferSize = 2048;
+
     // Create a scriptProcessorNode, which takes in buffered audio, processes it
     // and then sends it to an output buffer.  In this case, we won't send any
     // audio to the output buffer.  We will convert the buffer to 16bit integers
@@ -68,10 +74,9 @@ export default class Microphone {
     this.recorder = this.audioContext.createScriptProcessor(bufferSize, 1, 1);
 
     this.recorder.onaudioprocess = (audio) => {
-      // if(this.recording){
-        let left = audio.inputBuffer.getChannelData(0);
-        this.sender.send(Microphone.convertFloat32ToInt16(left));
-      // }
+      let left = audio.inputBuffer.getChannelData(0);
+      this.processAudio(Microphone.convertFloat32ToInt16(left));
+
     }
   }
 
@@ -81,13 +86,27 @@ export default class Microphone {
     this.recorder.connect(this.audioContext.destination);
   }
 
-  stopRecording(send) {
+  /**
+   * Stop recording and close free up resources.
+   * @return {Promise}      resolves after microphone is successfully closed.
+   */
+  stopRecording() {
     this.recording = false;
     this.microphoneStream.getTracks().forEach((track)=>track.stop());
-    this.audioInput.disconnect();
+    // This is a little hacky, but there's a bit of a delay because
+    // the audio has to be processed.  From what I researched, there is
+    // no event that we can listen to for when all the audio has been passed
+    // through the recorder script processor.  So, we'll wait about half a second
+    // and then close everything.
+    return new Promise((res, rej)=>{
+      setTimeout(()=>{
+        this.audioInput.disconnect();
+        this.audioContext.close();
 
-    this.recorder.disconnect();
-    this.sender.close(send);
+        this.recorder.disconnect();
+        res();
+      }, 500);
+    })
   }
 
   static convertFloat32ToInt16(buffer) {
